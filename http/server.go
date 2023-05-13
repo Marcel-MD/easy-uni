@@ -64,6 +64,7 @@ func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
 
 	universityProtectedRouter := universityRouter.Use(middleware.JwtAuth(cfg.ApiSecret))
 	universityProtectedRouter.POST("/", universityHandler.Create)
+	universityProtectedRouter.PUT("/:university_id", universityHandler.Update)
 	universityProtectedRouter.DELETE("/:university_id", universityHandler.Delete)
 
 	// Faculties
@@ -73,5 +74,6 @@ func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
 
 	facultyProtectedRouter := facultyRouter.Use(middleware.JwtAuth(cfg.ApiSecret))
 	facultyProtectedRouter.POST("/:university_id", facultyHandler.Create)
+	facultyProtectedRouter.PUT("/:faculty_id", facultyHandler.Update)
 	facultyProtectedRouter.DELETE("/:faculty_id", facultyHandler.Delete)
 }

@@ -16,6 +16,7 @@ type FacultyHandler interface {
 	Get(c *gin.Context)
 
 	Create(c *gin.Context)
+	Update(c *gin.Context)
 	Delete(c *gin.Context)
 }
 
@@ -91,6 +92,24 @@ func (h *facultyHandler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, newFaculty)
+}
+
+func (h *facultyHandler) Update(c *gin.Context) {
+	id := c.Param("faculty_id")
+	var faculty models.CreateFaculty
+	err := c.BindJSON(&faculty)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	updatedFaculty, err := h.service.Update(id, faculty)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedFaculty)
 }
 
 func (h *facultyHandler) Delete(c *gin.Context) {

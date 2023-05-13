@@ -14,6 +14,7 @@ type UniversityService interface {
 	Find(name string, country string, city string) []models.University
 
 	Create(university models.CreateUniversity) (models.University, error)
+	Update(id string, university models.CreateUniversity) (models.University, error)
 	Delete(id string) error
 }
 
@@ -64,6 +65,27 @@ func (s *universityService) Create(university models.CreateUniversity) (models.U
 	}
 
 	return newUniversity, nil
+}
+
+func (s *universityService) Update(id string, university models.CreateUniversity) (models.University, error) {
+	universityToUpdate, err := s.repo.FindByID(id)
+	if err != nil {
+		return models.University{}, err
+	}
+
+	universityToUpdate.Name = university.Name
+	universityToUpdate.About = university.About
+	universityToUpdate.Country = university.Country
+	universityToUpdate.City = university.City
+	universityToUpdate.Ranking = university.Ranking
+	universityToUpdate.ImgLink = university.ImgLink
+
+	err = s.repo.Update(&universityToUpdate)
+	if err != nil {
+		return models.University{}, err
+	}
+
+	return universityToUpdate, nil
 }
 
 func (s *universityService) Delete(id string) error {

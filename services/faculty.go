@@ -11,6 +11,7 @@ type FacultyService interface {
 	Find(name string, country string, city string, domain string, budget int) []models.Faculty
 
 	Create(universityID string, faculty models.CreateFaculty) (models.Faculty, error)
+	Update(id string, faculty models.CreateFaculty) (models.Faculty, error)
 	Delete(id string) error
 }
 
@@ -57,6 +58,31 @@ func (s *facultyService) Create(universityID string, faculty models.CreateFacult
 	}
 
 	return newFaculty, nil
+}
+
+func (s *facultyService) Update(id string, faculty models.CreateFaculty) (models.Faculty, error) {
+	facultyToUpdate, err := s.repo.FindByID(id)
+	if err != nil {
+		return models.Faculty{}, err
+	}
+
+	facultyToUpdate.Name = faculty.Name
+	facultyToUpdate.Domains = faculty.Domains
+	facultyToUpdate.About = faculty.About
+	facultyToUpdate.Budget = faculty.Budget
+	facultyToUpdate.Duration = faculty.Duration
+	facultyToUpdate.ApplyDate = faculty.ApplyDate
+	facultyToUpdate.StartDate = faculty.StartDate
+	facultyToUpdate.AcademicRequirements = faculty.AcademicRequirements
+	facultyToUpdate.LanguageRequirements = faculty.LanguageRequirements
+	facultyToUpdate.OtherRequirements = faculty.OtherRequirements
+
+	err = s.repo.Update(&facultyToUpdate)
+	if err != nil {
+		return models.Faculty{}, err
+	}
+
+	return facultyToUpdate, nil
 }
 
 func (s *facultyService) Delete(id string) error {

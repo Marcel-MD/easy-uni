@@ -15,6 +15,7 @@ type UniversityHandler interface {
 	Get(c *gin.Context)
 
 	Create(c *gin.Context)
+	Update(c *gin.Context)
 	Delete(c *gin.Context)
 }
 
@@ -73,6 +74,20 @@ func (h *universityHandler) Create(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, newUniversity)
+}
+
+func (h *universityHandler) Update(c *gin.Context) {
+	id := c.Param("university_id")
+	var university models.CreateUniversity
+	c.BindJSON(&university)
+
+	updatedUniversity, err := h.service.Update(id, university)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, updatedUniversity)
 }
 
 func (h *universityHandler) Delete(c *gin.Context) {

@@ -15,9 +15,9 @@ type University struct {
 
 type CreateUniversity struct {
 	Name    string `json:"name" binding:"required"`
-	About   string `json:"about" binding:"required"`
+	About   string `json:"about"`
 	Country string `json:"country" binding:"required"`
-	City    string `json:"city" binding:"required"`
-	Ranking string `json:"ranking" binding:"required"`
+	City    string `json:"city"`
+	Ranking string `json:"ranking"`
 	ImgLink string `json:"img_link" binding:"required"`
 }

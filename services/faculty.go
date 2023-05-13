@@ -47,6 +47,7 @@ func (s *facultyService) Create(universityID string, faculty models.CreateFacult
 		StartDate:            faculty.StartDate,
 		AcademicRequirements: faculty.AcademicRequirements,
 		LanguageRequirements: faculty.LanguageRequirements,
+		OtherRequirements:    faculty.OtherRequirements,
 		UniversityID:         universityID,
 	}
 

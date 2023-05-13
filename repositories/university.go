@@ -45,7 +45,7 @@ func (r *universityRepository) FindAll() []models.University {
 
 func (r *universityRepository) FindByID(id string) (models.University, error) {
 	var university models.University
-	err := r.db.First(&university, "id = ?", id).Error
+	err := r.db.Preload("Faculties").First(&university, "id = ?", id).Error
 
 	return university, err
 }

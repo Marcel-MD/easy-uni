@@ -51,9 +51,11 @@ func (s *universityService) Find(name string, country string, city string) []mod
 func (s *universityService) Create(university models.CreateUniversity) (models.University, error) {
 	newUniversity := models.University{
 		Name:    university.Name,
+		About:   university.About,
 		Country: university.Country,
 		City:    university.City,
 		Ranking: university.Ranking,
+		ImgLink: university.ImgLink,
 	}
 
 	err := s.repo.Create(&newUniversity)

@@ -3,7 +3,6 @@ package handlers
 import (
 	"easy-uni/models"
 	"easy-uni/services"
-	"fmt"
 	"net/http"
 	"sync"
 
@@ -20,7 +19,6 @@ type UserHandler interface {
 
 type userHandler struct {
 	userService services.UserService
-	mailService services.MailService
 }
 
 var (
@@ -32,7 +30,6 @@ func GetUserHandler() UserHandler {
 	userOnce.Do(func() {
 		userHnd = &userHandler{
 			userService: services.GetUserService(),
-			mailService: services.GetMailService(),
 		}
 	})
 
@@ -80,14 +77,6 @@ func (h *userHandler) Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	mail := models.Mail{
-		To:      []string{model.Email},
-		Subject: "Welcome to EasyUni",
-		Body:    fmt.Sprintf("Welcome %s", model.Name),
-	}
-
-	go h.mailService.Send(mail)
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }

@@ -14,6 +14,7 @@ type Faculty struct {
 	StartDate            string         `json:"start_date"`
 	AcademicRequirements string         `json:"academic_requirements"`
 	LanguageRequirements string         `json:"language_requirements"`
+	OtherRequirements    string         `json:"other_requirements"`
 
 	UniversityID string     `json:"university_id"`
 	University   University `json:"university" gorm:"foreignKey:UniversityID"`
@@ -29,4 +30,5 @@ type CreateFaculty struct {
 	StartDate            string   `json:"start_date" binding:"required"`
 	AcademicRequirements string   `json:"academic_requirements" binding:"required"`
 	LanguageRequirements string   `json:"language_requirements" binding:"required"`
+	OtherRequirements    string   `json:"other_requirements" binding:"required"`
 }

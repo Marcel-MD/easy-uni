@@ -10,12 +10,12 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func Generate(userId string, lifespan time.Duration, secret string) (string, error) {
-	log.Debug().Str("user_id", userId).Msg("Generating token")
+func Generate(userID string, lifespan time.Duration, secret string) (string, error) {
+	log.Debug().Str("user_id", userID).Msg("Generating token")
 
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = userId
+	claims["user_id"] = userID
 	claims["exp"] = time.Now().Add(lifespan).Unix()
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -27,8 +27,8 @@ func Generate(userId string, lifespan time.Duration, secret string) (string, err
 	return token, nil
 }
 
-func ExtractId(c *gin.Context, secret string) (string, error) {
-	log.Debug().Msg("Extracting user Id from token")
+func ExtractID(c *gin.Context, secret string) (string, error) {
+	log.Debug().Msg("Extracting user ID from token")
 
 	tokenString := extract(c)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

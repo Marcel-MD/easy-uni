@@ -12,7 +12,7 @@ import (
 
 type UserHandler interface {
 	GetAll(c *gin.Context)
-	GetById(c *gin.Context)
+	GetByID(c *gin.Context)
 	GetCurrent(c *gin.Context)
 	Register(c *gin.Context)
 	Login(c *gin.Context)
@@ -44,9 +44,9 @@ func (h *userHandler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-func (h *userHandler) GetById(c *gin.Context) {
+func (h *userHandler) GetByID(c *gin.Context) {
 	id := c.Param("user_id")
-	user, err := h.userService.FindOne(id)
+	user, err := h.userService.FindByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -57,7 +57,7 @@ func (h *userHandler) GetById(c *gin.Context) {
 func (h *userHandler) GetCurrent(c *gin.Context) {
 	id := c.GetString("user_id")
 
-	user, err := h.userService.FindOne(id)
+	user, err := h.userService.FindByID(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "record not found"})
 		return

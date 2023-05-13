@@ -15,7 +15,7 @@ import (
 
 type UserService interface {
 	FindAll() []models.User
-	FindOne(id string) (models.User, error)
+	FindByID(id string) (models.User, error)
 	Register(user models.RegisterUser) (string, error)
 	Login(user models.LoginUser) (string, error)
 }
@@ -49,10 +49,10 @@ func (s *userService) FindAll() []models.User {
 	return s.repository.FindAll()
 }
 
-func (s *userService) FindOne(id string) (models.User, error) {
+func (s *userService) FindByID(id string) (models.User, error) {
 	log.Debug().Str("id", id).Msg("Finding user")
 
-	user, err := s.repository.FindById(id)
+	user, err := s.repository.FindByID(id)
 	if err != nil {
 		return user, err
 	}
@@ -84,7 +84,7 @@ func (s *userService) Register(user models.RegisterUser) (string, error) {
 		return "", err
 	}
 
-	return auth.Generate(newUser.Id, s.cfg.TokenLifespan, s.cfg.ApiSecret)
+	return auth.Generate(newUser.ID, s.cfg.TokenLifespan, s.cfg.ApiSecret)
 }
 
 func (s *userService) Login(user models.LoginUser) (string, error) {
@@ -100,7 +100,7 @@ func (s *userService) Login(user models.LoginUser) (string, error) {
 		return "", err
 	}
 
-	return auth.Generate(existingUser.Id, s.cfg.TokenLifespan, s.cfg.ApiSecret)
+	return auth.Generate(existingUser.ID, s.cfg.TokenLifespan, s.cfg.ApiSecret)
 }
 
 func (s *userService) verifyPassword(password, hashedPassword string) error {

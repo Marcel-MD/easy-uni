@@ -28,6 +28,8 @@ func GetDB() *gorm.DB {
 		}
 
 		db.AutoMigrate(&models.User{})
+		db.AutoMigrate(&models.University{})
+		db.AutoMigrate(&models.Faculty{})
 
 		database = db
 	})

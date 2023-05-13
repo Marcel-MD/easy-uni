@@ -43,14 +43,35 @@ func GetServer() *http.Server {
 }
 
 func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
-	uh := handlers.GetUserHandler()
+	userHandler := handlers.GetUserHandler()
+	universityHandler := handlers.GetUniversityHandler()
+	facultyHandler := handlers.GetFacultyHandler()
 
-	ug := router.Group("/users")
-	ug.POST("/register", uh.Register)
-	ug.POST("/login", uh.Login)
-	ug.GET("/", uh.GetAll)
-	ug.GET("/:user_id", uh.GetById)
+	// Users
+	userRouter := router.Group("/users")
+	userRouter.POST("/register", userHandler.Register)
+	userRouter.POST("/login", userHandler.Login)
+	userRouter.GET("/", userHandler.GetAll)
+	userRouter.GET("/:user_id", userHandler.GetByID)
 
-	ur := ug.Use(middleware.JwtAuth(cfg.ApiSecret))
-	ur.GET("/current", uh.GetCurrent)
+	userProtectedRouter := userRouter.Use(middleware.JwtAuth(cfg.ApiSecret))
+	userProtectedRouter.GET("/current", userHandler.GetCurrent)
+
+	// Universities
+	universityRouter := router.Group("/universities")
+	universityRouter.GET("/", universityHandler.Get)
+	universityRouter.GET("/:university_id", universityHandler.GetByID)
+
+	universityProtectedRouter := universityRouter.Use(middleware.JwtAuth(cfg.ApiSecret))
+	universityProtectedRouter.POST("/", universityHandler.Create)
+	universityProtectedRouter.DELETE("/:university_id", universityHandler.Delete)
+
+	// Faculties
+	facultyRouter := router.Group("/faculties")
+	facultyRouter.GET("/", facultyHandler.Get)
+	facultyRouter.GET("/:faculty_id", facultyHandler.GetByID)
+
+	facultyProtectedRouter := facultyRouter.Use(middleware.JwtAuth(cfg.ApiSecret))
+	facultyProtectedRouter.POST("/:university_id", facultyHandler.Create)
+	facultyProtectedRouter.DELETE("/:faculty_id", facultyHandler.Delete)
 }

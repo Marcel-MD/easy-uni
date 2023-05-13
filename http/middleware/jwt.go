@@ -10,7 +10,7 @@ import (
 
 func JwtAuth(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id, err := auth.ExtractId(c, secret)
+		id, err := auth.ExtractID(c, secret)
 		if err != nil {
 			log.Err(err).Msg("Invalid token")
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})

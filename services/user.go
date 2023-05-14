@@ -5,7 +5,6 @@ import (
 	"easy-uni/config"
 	"easy-uni/repositories"
 	"errors"
-	"fmt"
 	"sync"
 
 	"easy-uni/models"
@@ -75,13 +74,13 @@ func (s *userService) Register(user models.RegisterUser) (string, error) {
 	if user.Password == "" {
 		user.Password = uuid.New().String()
 
-		mail := models.Mail{
-			To:      []string{user.Email},
-			Subject: "Welcome to EasyUni",
-			Body:    fmt.Sprintf("Welcome %s!\nYour password for EasyUni is <b>%s</b>", user.Name, user.Password),
-		}
+		// mail := models.Mail{
+		// 	To:      []string{user.Email},
+		// 	Subject: "Welcome to EasyUni",
+		// 	Body:    fmt.Sprintf("Welcome %s!\nYour password for EasyUni is <b>%s</b>", user.Name, user.Password),
+		// }
 
-		go s.mailService.Send(mail)
+		// go s.mailService.Send(mail)
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)

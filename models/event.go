@@ -22,7 +22,7 @@ type CreateEvent struct {
 	Name       string `json:"name" binding:"required"`
 	URL        string `json:"url" binding:"required"`
 	VisitorID  string `json:"visitor_id" binding:"required"`
-	CampaignID string `json:"campaign_id" binding:"required"`
+	CampaignID string `json:"campaign_id"`
 
 	Payload JSONB `json:"payload"`
 	Meta    JSONB `json:"meta"`

@@ -14,8 +14,8 @@ type Event struct {
 	VisitorID  string `json:"visitor_id"`
 	CampaignID string `json:"campaign_id"`
 
-	Payload JSONB `gorm:"type:jsonb;default:'{}'"`
-	Meta    JSONB `gorm:"type:jsonb;default:'{}'"`
+	Payload JSONB `json:"payload" gorm:"type:jsonb;default:'{}'"`
+	Meta    JSONB `json:"meta" gorm:"type:jsonb;default:'{}'"`
 }
 
 type CreateEvent struct {

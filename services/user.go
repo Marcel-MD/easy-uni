@@ -90,9 +90,10 @@ func (s *userService) Register(user models.RegisterUser) (string, error) {
 	}
 
 	newUser := models.User{
-		Email:    user.Email,
-		Name:     user.Name,
-		Password: string(hashedPassword),
+		Email:     user.Email,
+		Name:      user.Name,
+		Password:  string(hashedPassword),
+		VisitorID: user.VisitorID,
 	}
 
 	err = s.repository.Create(&newUser)

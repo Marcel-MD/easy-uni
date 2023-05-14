@@ -43,11 +43,8 @@ func GetServer() *http.Server {
 }
 
 func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
-	userHandler := handlers.GetUserHandler()
-	universityHandler := handlers.GetUniversityHandler()
-	facultyHandler := handlers.GetFacultyHandler()
-
 	// Users
+	userHandler := handlers.GetUserHandler()
 	userRouter := router.Group("/users")
 	userRouter.POST("/register", userHandler.Register)
 	userRouter.POST("/login", userHandler.Login)
@@ -58,6 +55,7 @@ func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
 	userProtectedRouter.GET("/current", userHandler.GetCurrent)
 
 	// Universities
+	universityHandler := handlers.GetUniversityHandler()
 	universityRouter := router.Group("/universities")
 	universityRouter.GET("/", universityHandler.Get)
 	universityRouter.GET("/:university_id", universityHandler.GetByID)
@@ -68,6 +66,7 @@ func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
 	universityProtectedRouter.DELETE("/:university_id", universityHandler.Delete)
 
 	// Faculties
+	facultyHandler := handlers.GetFacultyHandler()
 	facultyRouter := router.Group("/faculties")
 	facultyRouter.GET("/", facultyHandler.Get)
 	facultyRouter.GET("/:faculty_id", facultyHandler.GetByID)
@@ -76,4 +75,14 @@ func routeUserHandler(router *gin.RouterGroup, cfg config.Config) {
 	facultyProtectedRouter.POST("/:university_id", facultyHandler.Create)
 	facultyProtectedRouter.PUT("/:faculty_id", facultyHandler.Update)
 	facultyProtectedRouter.DELETE("/:faculty_id", facultyHandler.Delete)
+
+	// Events
+	eventHandler := handlers.GetEventHandler()
+	eventRouter := router.Group("/events")
+	eventRouter.GET("/", eventHandler.GetAll)
+	eventRouter.GET("/:event_id", eventHandler.GetByID)
+	eventRouter.POST("/", eventHandler.Create)
+
+	eventProtectedRouter := eventRouter.Use(middleware.JwtAuth(cfg.ApiSecret))
+	eventProtectedRouter.DELETE("/:event_id", eventHandler.Delete)
 }

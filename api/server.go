@@ -55,7 +55,7 @@ func routeSwaggerHandler(router *gin.RouterGroup, cfg config.Config) {
 		return
 	}
 
-	docs.SwaggerInfo.Host = cfg.Host + ":" + cfg.Port
+	docs.SwaggerInfo.Host = cfg.Host
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 

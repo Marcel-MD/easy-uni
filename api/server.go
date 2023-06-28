@@ -40,7 +40,7 @@ func GetServer() *http.Server {
 		routeSwaggerHandler(r, cfg)
 
 		s := &http.Server{
-			Addr:    cfg.Port,
+			Addr:    ":" + cfg.Port,
 			Handler: e,
 		}
 
@@ -55,7 +55,7 @@ func routeSwaggerHandler(router *gin.RouterGroup, cfg config.Config) {
 		return
 	}
 
-	docs.SwaggerInfo.Host = cfg.Host + cfg.Port
+	docs.SwaggerInfo.Host = cfg.Host + ":" + cfg.Port
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 

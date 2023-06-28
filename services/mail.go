@@ -1,12 +1,13 @@
 package services
 
 import (
-	"easy-uni/config"
-	"easy-uni/models"
 	"fmt"
 	"net/smtp"
 	"strings"
 	"sync"
+
+	"github.com/Marcel-MD/easy-uni/config"
+	"github.com/Marcel-MD/easy-uni/models"
 
 	"github.com/rs/zerolog/log"
 )

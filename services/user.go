@@ -1,13 +1,14 @@
 package services
 
 import (
-	"easy-uni/auth"
-	"easy-uni/config"
-	"easy-uni/repositories"
 	"errors"
 	"sync"
 
-	"easy-uni/models"
+	"github.com/Marcel-MD/easy-uni/auth"
+	"github.com/Marcel-MD/easy-uni/config"
+	"github.com/Marcel-MD/easy-uni/repositories"
+
+	"github.com/Marcel-MD/easy-uni/models"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"

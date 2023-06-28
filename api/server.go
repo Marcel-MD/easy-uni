@@ -1,12 +1,13 @@
 package api
 
 import (
-	"easy-uni/api/handlers"
-	"easy-uni/api/middleware"
-	"easy-uni/config"
-	docs "easy-uni/docs"
 	"net/http"
 	"sync"
+
+	"github.com/Marcel-MD/easy-uni/api/handlers"
+	"github.com/Marcel-MD/easy-uni/api/middleware"
+	"github.com/Marcel-MD/easy-uni/config"
+	docs "github.com/Marcel-MD/easy-uni/docs"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -50,6 +51,10 @@ func GetServer() *http.Server {
 }
 
 func routeSwaggerHandler(router *gin.RouterGroup, cfg config.Config) {
+	if cfg.Env == "prod" {
+		return
+	}
+
 	docs.SwaggerInfo.Host = cfg.Host + cfg.Port
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }

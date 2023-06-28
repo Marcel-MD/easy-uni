@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"easy-uni/models"
-	"easy-uni/services"
 	"net/http"
 	"strconv"
 	"sync"
+
+	"github.com/Marcel-MD/easy-uni/models"
+	"github.com/Marcel-MD/easy-uni/services"
 
 	"github.com/gin-gonic/gin"
 )

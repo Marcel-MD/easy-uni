@@ -1,6 +1,6 @@
-module easy-uni
+module github.com/Marcel-MD/easy-uni
 
-go 1.20
+go 1.19
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible

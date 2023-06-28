@@ -13,6 +13,7 @@ type Config struct {
 	Host        string `env:"HOST" envDefault:"localhost"`
 	Port        string `env:"PORT" envDefault:":8080"`
 	AllowOrigin string `env:"ALLOW_ORIGIN" envDefault:"*"`
+	Env         string `env:"ENV" envDefault:"dev"`
 
 	ApiSecret     string        `env:"API_SECRET" envDefault:"SecretSecretSecret"`
 	TokenLifespan time.Duration `env:"TOKEN_LIFESPAN" envDefault:"24h"`

@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"easy-uni/models"
 	"sync"
+
+	"github.com/Marcel-MD/easy-uni/models"
 
 	"github.com/lib/pq"
 	"github.com/rs/zerolog/log"

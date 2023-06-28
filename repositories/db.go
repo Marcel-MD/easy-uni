@@ -1,9 +1,10 @@
 package repositories
 
 import (
-	"easy-uni/config"
-	"easy-uni/models"
 	"sync"
+
+	"github.com/Marcel-MD/easy-uni/config"
+	"github.com/Marcel-MD/easy-uni/models"
 
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"

@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"easy-uni/auth"
 	"net/http"
+
+	"github.com/Marcel-MD/easy-uni/auth"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"

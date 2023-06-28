@@ -1,8 +1,8 @@
 package services
 
 import (
-	"easy-uni/models"
-	"easy-uni/repositories"
+	"github.com/Marcel-MD/easy-uni/models"
+	"github.com/Marcel-MD/easy-uni/repositories"
 )
 
 type FacultyService interface {

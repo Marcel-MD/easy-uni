@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
-	"easy-uni/api"
-	"easy-uni/repositories"
 	"errors"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/Marcel-MD/easy-uni/api"
+	"github.com/Marcel-MD/easy-uni/repositories"
 
 	"github.com/rs/zerolog/log"
 )

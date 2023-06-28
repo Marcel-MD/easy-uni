@@ -36,11 +36,24 @@ func GetUserHandler() UserHandler {
 	return userHnd
 }
 
+// @Description get all users
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.User
+// @Router /users [get]
 func (h *userHandler) GetAll(c *gin.Context) {
 	users := h.userService.FindAll()
 	c.JSON(http.StatusOK, users)
 }
 
+// @Description get user by id
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user_id path string true "User ID"
+// @Success 200 {object} models.User
+// @Router /users/{user_id} [get]
 func (h *userHandler) GetByID(c *gin.Context) {
 	id := c.Param("user_id")
 	user, err := h.userService.FindByID(id)
@@ -51,6 +64,13 @@ func (h *userHandler) GetByID(c *gin.Context) {
 	c.JSON(200, user)
 }
 
+// @Description get current user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} models.User
+// @Router /users/current [get]
 func (h *userHandler) GetCurrent(c *gin.Context) {
 	id := c.GetString("user_id")
 
@@ -63,6 +83,13 @@ func (h *userHandler) GetCurrent(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// @Description register user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body models.RegisterUser true "User"
+// @Success 200 {object} models.Token
+// @Router /users/register [post]
 func (h *userHandler) Register(c *gin.Context) {
 
 	var model models.RegisterUser
@@ -78,9 +105,16 @@ func (h *userHandler) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, models.Token{Token: token})
 }
 
+// @Description login user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body models.LoginUser true "User"
+// @Success 200 {object} models.Token
+// @Router /users/login [post]
 func (h *userHandler) Login(c *gin.Context) {
 
 	var model models.LoginUser
@@ -96,5 +130,5 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, models.Token{Token: token})
 }

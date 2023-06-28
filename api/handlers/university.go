@@ -10,7 +10,6 @@ import (
 )
 
 type UniversityHandler interface {
-	GetAll(c *gin.Context)
 	GetByID(c *gin.Context)
 	Get(c *gin.Context)
 
@@ -38,11 +37,13 @@ func GetUniversityHandler() UniversityHandler {
 	return universityHnd
 }
 
-func (h *universityHandler) GetAll(c *gin.Context) {
-	universities := h.service.FindAll()
-	c.JSON(http.StatusOK, universities)
-}
-
+// @Description get university by id
+// @Tags universities
+// @Accept json
+// @Produce json
+// @Param university_id path string true "University ID"
+// @Success 200 {object} models.University
+// @Router /universities/{university_id} [get]
 func (h *universityHandler) GetByID(c *gin.Context) {
 	id := c.Param("university_id")
 	university, err := h.service.FindByID(id)
@@ -54,6 +55,15 @@ func (h *universityHandler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, university)
 }
 
+// @Description get university by name, country, city
+// @Tags universities
+// @Accept json
+// @Produce json
+// @Param name query string false "University Name"
+// @Param country query string false "University Country"
+// @Param city query string false "University City"
+// @Success 200 {array} models.University
+// @Router /universities [get]
 func (h *universityHandler) Get(c *gin.Context) {
 	name := c.Query("name")
 	country := c.Query("country")
@@ -63,6 +73,14 @@ func (h *universityHandler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, universities)
 }
 
+// @Description create university
+// @Tags universities
+// @Accept json
+// @Produce json
+// @Param university body models.CreateUniversity true "University"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.University
+// @Router /universities [post]
 func (h *universityHandler) Create(c *gin.Context) {
 	var university models.CreateUniversity
 	c.BindJSON(&university)
@@ -76,6 +94,15 @@ func (h *universityHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, newUniversity)
 }
 
+// @Description update university
+// @Tags universities
+// @Accept json
+// @Produce json
+// @Param university_id path string true "University ID"
+// @Param university body models.CreateUniversity true "University"
+// @Security ApiKeyAuth
+// @Success 200 {object} models.University
+// @Router /universities/{university_id} [put]
 func (h *universityHandler) Update(c *gin.Context) {
 	id := c.Param("university_id")
 	var university models.CreateUniversity
@@ -90,6 +117,14 @@ func (h *universityHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, updatedUniversity)
 }
 
+// @Description delete university
+// @Tags universities
+// @Accept json
+// @Produce json
+// @Param university_id path string true "University ID"
+// @Security ApiKeyAuth
+// @Success 200 {string} string "University deleted successfully"
+// @Router /universities/{university_id} [delete]
 func (h *universityHandler) Delete(c *gin.Context) {
 	id := c.Param("university_id")
 	err := h.service.Delete(id)

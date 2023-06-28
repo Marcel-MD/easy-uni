@@ -35,11 +35,24 @@ func GetEventHandler() EventHandler {
 	return eventHnd
 }
 
+// @Description get all events
+// @Tags events
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Event
+// @Router /events [get]
 func (h *eventHandler) GetAll(c *gin.Context) {
 	events := h.service.FindAll()
 	c.JSON(http.StatusOK, events)
 }
 
+// @Description get event by id
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param event_id path string true "Event ID"
+// @Success 200 {object} models.Event
+// @Router /events/{event_id} [get]
 func (h *eventHandler) GetByID(c *gin.Context) {
 	id := c.Param("event_id")
 	event, err := h.service.FindByID(id)
@@ -51,6 +64,13 @@ func (h *eventHandler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, event)
 }
 
+// @Description create event
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param event body models.CreateEvent true "Event"
+// @Success 201 {object} models.Event
+// @Router /events [post]
 func (h *eventHandler) Create(c *gin.Context) {
 	var event models.CreateEvent
 	err := c.BindJSON(&event)
@@ -68,6 +88,14 @@ func (h *eventHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, newEvent)
 }
 
+// @Description delete event
+// @Tags events
+// @Accept json
+// @Produce json
+// @Param event_id path string true "Event ID"
+// @Security ApiKeyAuth
+// @Success 204
+// @Router /events/{event_id} [delete]
 func (h *eventHandler) Delete(c *gin.Context) {
 	id := c.Param("event_id")
 	err := h.service.Delete(id)

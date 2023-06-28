@@ -14,3 +14,5 @@ $ docker compose up
 ```
 
 You might have to run this command twice if it doesn't work the first time :)
+
+To access swagger-ui go to [localhost:8080/api/swagger/index.html](http://localhost:8080/api/swagger/index.html)

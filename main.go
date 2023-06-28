@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
-	"easy-uni/http"
+	"easy-uni/api"
 	"easy-uni/repositories"
+	"errors"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -12,13 +14,22 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// @title Easy-Uni API
+// @description This is the API for the Easy-Uni application.
+// @BasePath /api
+// @schemes http https
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+// @description Type "bearer" followed by a space and JWT token
 func main() {
-	srv := http.GetServer()
+	srv := api.GetServer()
 
 	go func() {
-		if err := srv.ListenAndServe(); err != nil {
-			log.Fatal().Err(err).Msg("Server failed to start")
+		if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal().Err(err).Msg("Failed to start server")
 		}
+		log.Info().Msg("All server connections are closed")
 	}()
 
 	quit := make(chan os.Signal, 1)
@@ -38,7 +49,5 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to close db connection")
 	}
 
-	<-ctx.Done()
-
-	log.Info().Msg("Server exiting")
+	log.Info().Msg("Server exited properly")
 }

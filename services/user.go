@@ -86,6 +86,7 @@ func (s *userService) Register(user models.RegisterUser) (string, error) {
 		Name:      user.Name,
 		Password:  string(hashedPassword),
 		VisitorID: user.VisitorID,
+		Roles:     []string{models.UserRole},
 	}
 
 	err = s.repository.Create(&newUser)
@@ -93,7 +94,7 @@ func (s *userService) Register(user models.RegisterUser) (string, error) {
 		return "", err
 	}
 
-	return auth.Generate(newUser.ID, s.cfg.TokenLifespan, s.cfg.ApiSecret)
+	return auth.Generate(newUser.ID, newUser.Roles, s.cfg.TokenLifespan, s.cfg.ApiSecret)
 }
 
 func (s *userService) Login(user models.LoginUser) (string, error) {
@@ -109,7 +110,7 @@ func (s *userService) Login(user models.LoginUser) (string, error) {
 		return "", err
 	}
 
-	return auth.Generate(existingUser.ID, s.cfg.TokenLifespan, s.cfg.ApiSecret)
+	return auth.Generate(existingUser.ID, existingUser.Roles, s.cfg.TokenLifespan, s.cfg.ApiSecret)
 }
 
 func (s *userService) verifyPassword(password, hashedPassword string) error {

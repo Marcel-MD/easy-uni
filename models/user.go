@@ -1,5 +1,7 @@
 package models
 
+import "github.com/lib/pq"
+
 type User struct {
 	Base
 
@@ -7,7 +9,24 @@ type User struct {
 	Name      string `json:"name"`
 	Password  string `json:"-"`
 	VisitorID string `json:"visitor_id"`
+
+	Roles pq.StringArray `json:"roles" gorm:"type:text[]"`
 }
+
+func (u *User) HasRole(role string) bool {
+	for _, r := range u.Roles {
+		if r == role {
+			return true
+		}
+	}
+
+	return false
+}
+
+const (
+	UserRole  = "user"
+	AdminRole = "admin"
+)
 
 type RegisterUser struct {
 	Email     string `json:"email" binding:"required,email"`

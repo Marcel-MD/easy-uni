@@ -8,6 +8,7 @@ import (
 	"github.com/Marcel-MD/easy-uni/api/middleware"
 	"github.com/Marcel-MD/easy-uni/config"
 	docs "github.com/Marcel-MD/easy-uni/docs"
+	"github.com/Marcel-MD/easy-uni/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
@@ -79,7 +80,7 @@ func routeUniversityHandler(router *gin.RouterGroup, cfg config.Config) {
 	r.GET("/", h.Get)
 	r.GET("/:university_id", h.GetByID)
 
-	pr := r.Use(middleware.JwtAuth(cfg.ApiSecret))
+	pr := r.Use(middleware.JwtAuthRoles(cfg.ApiSecret, []string{models.AdminRole}))
 	pr.POST("/", h.Create)
 	pr.PUT("/:university_id", h.Update)
 	pr.DELETE("/:university_id", h.Delete)
@@ -92,7 +93,7 @@ func routeFacultyHandler(router *gin.RouterGroup, cfg config.Config) {
 	r.GET("/", h.Get)
 	r.GET("/:faculty_id", h.GetByID)
 
-	pr := r.Use(middleware.JwtAuth(cfg.ApiSecret))
+	pr := r.Use(middleware.JwtAuthRoles(cfg.ApiSecret, []string{models.AdminRole}))
 	pr.POST("/:university_id", h.Create)
 	pr.PUT("/:faculty_id", h.Update)
 	pr.DELETE("/:faculty_id", h.Delete)
@@ -106,6 +107,6 @@ func routeEventHandler(router *gin.RouterGroup, cfg config.Config) {
 	r.GET("/:event_id", h.GetByID)
 	r.POST("/", h.Create)
 
-	pr := r.Use(middleware.JwtAuth(cfg.ApiSecret))
+	pr := r.Use(middleware.JwtAuthRoles(cfg.ApiSecret, []string{models.AdminRole}))
 	pr.DELETE("/:event_id", h.Delete)
 }

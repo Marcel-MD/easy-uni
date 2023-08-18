@@ -1,14 +1,18 @@
 package services
 
 import (
+	"sync"
+
+	"github.com/Marcel-MD/easy-uni/data/repositories"
 	"github.com/Marcel-MD/easy-uni/models"
-	"github.com/Marcel-MD/easy-uni/repositories"
+
+	"github.com/rs/zerolog/log"
 )
 
 type FacultyService interface {
-	FindAll() []models.Faculty
-	FindByID(id string) (models.Faculty, error)
-	Find(name string, country string, city string, domain string, budget int) []models.Faculty
+	FindAll(page, size int) ([]models.Faculty, error)
+	FindById(id string) (models.Faculty, error)
+	Find(query models.FacultyQuery) []models.Faculty
 
 	Create(universityID string, faculty models.CreateFaculty) (models.Faculty, error)
 	Update(id string, faculty models.CreateFaculty) (models.Faculty, error)
@@ -19,22 +23,31 @@ type facultyService struct {
 	repo repositories.FacultyRepository
 }
 
+var (
+	facultyOnce sync.Once
+	facultySrv  FacultyService
+)
+
 func GetFacultyService() FacultyService {
-	return &facultyService{
-		repo: repositories.GetFacultyRepository(),
-	}
+	facultyOnce.Do(func() {
+		log.Info().Msg("Initializing faculty service")
+		facultySrv = &facultyService{
+			repo: repositories.GetFacultyRepository(),
+		}
+	})
+	return facultySrv
 }
 
-func (s *facultyService) FindAll() []models.Faculty {
-	return s.repo.FindAll()
+func (s *facultyService) FindAll(page, size int) ([]models.Faculty, error) {
+	return s.repo.FindAll(page, size)
 }
 
-func (s *facultyService) FindByID(id string) (models.Faculty, error) {
-	return s.repo.FindByID(id)
+func (s *facultyService) FindById(id string) (models.Faculty, error) {
+	return s.repo.FindById(id)
 }
 
-func (s *facultyService) Find(name string, country string, city string, domain string, budget int) []models.Faculty {
-	return s.repo.Find(name, country, city, domain, budget)
+func (s *facultyService) Find(query models.FacultyQuery) []models.Faculty {
+	return s.repo.Find(query.Name, query.Country, query.City, query.Domain, query.Budget)
 }
 
 func (s *facultyService) Create(universityID string, faculty models.CreateFaculty) (models.Faculty, error) {
@@ -61,7 +74,7 @@ func (s *facultyService) Create(universityID string, faculty models.CreateFacult
 }
 
 func (s *facultyService) Update(id string, faculty models.CreateFaculty) (models.Faculty, error) {
-	facultyToUpdate, err := s.repo.FindByID(id)
+	facultyToUpdate, err := s.repo.FindById(id)
 	if err != nil {
 		return models.Faculty{}, err
 	}
@@ -86,7 +99,7 @@ func (s *facultyService) Update(id string, faculty models.CreateFaculty) (models
 }
 
 func (s *facultyService) Delete(id string) error {
-	faculty, err := s.repo.FindByID(id)
+	faculty, err := s.repo.FindById(id)
 	if err != nil {
 		return err
 	}

@@ -3,16 +3,16 @@ package services
 import (
 	"sync"
 
+	"github.com/Marcel-MD/easy-uni/data/repositories"
 	"github.com/Marcel-MD/easy-uni/models"
-	"github.com/Marcel-MD/easy-uni/repositories"
 
 	"github.com/rs/zerolog/log"
 )
 
 type UniversityService interface {
-	FindAll() []models.University
-	FindByID(id string) (models.University, error)
-	Find(name string, country string, city string) []models.University
+	FindAll(page, size int) ([]models.University, error)
+	FindById(id string) (models.University, error)
+	Find(query models.UniversityQuery) []models.University
 
 	Create(university models.CreateUniversity) (models.University, error)
 	Update(id string, university models.CreateUniversity) (models.University, error)
@@ -38,16 +38,16 @@ func GetUniversityService() UniversityService {
 	return universitySrv
 }
 
-func (s *universityService) FindAll() []models.University {
-	return s.repo.FindAll()
+func (s *universityService) FindAll(page, size int) ([]models.University, error) {
+	return s.repo.FindAll(page, size)
 }
 
-func (s *universityService) FindByID(id string) (models.University, error) {
-	return s.repo.FindByID(id)
+func (s *universityService) FindById(id string) (models.University, error) {
+	return s.repo.FindById(id)
 }
 
-func (s *universityService) Find(name string, country string, city string) []models.University {
-	return s.repo.Find(name, country, city)
+func (s *universityService) Find(query models.UniversityQuery) []models.University {
+	return s.repo.Find(query.Name, query.Country, query.City)
 }
 
 func (s *universityService) Create(university models.CreateUniversity) (models.University, error) {
@@ -69,7 +69,7 @@ func (s *universityService) Create(university models.CreateUniversity) (models.U
 }
 
 func (s *universityService) Update(id string, university models.CreateUniversity) (models.University, error) {
-	universityToUpdate, err := s.repo.FindByID(id)
+	universityToUpdate, err := s.repo.FindById(id)
 	if err != nil {
 		return models.University{}, err
 	}
@@ -90,7 +90,7 @@ func (s *universityService) Update(id string, university models.CreateUniversity
 }
 
 func (s *universityService) Delete(id string) error {
-	university, err := s.repo.FindByID(id)
+	university, err := s.repo.FindById(id)
 	if err != nil {
 		return err
 	}

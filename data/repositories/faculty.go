@@ -3,6 +3,7 @@ package repositories
 import (
 	"sync"
 
+	"github.com/Marcel-MD/easy-uni/data"
 	"github.com/Marcel-MD/easy-uni/models"
 
 	"github.com/lib/pq"
@@ -11,18 +12,19 @@ import (
 )
 
 type FacultyRepository interface {
-	FindAll() []models.Faculty
-	FindByID(id string) (models.Faculty, error)
+	FindAll(page, size int) ([]models.Faculty, error)
+	FindById(id string) (models.Faculty, error)
+	Create(t *models.Faculty) error
+	Update(t *models.Faculty) error
+	Delete(t *models.Faculty) error
+
 	FindByUniversityID(universityID string) []models.Faculty
 	Find(name string, country string, city string, domain string, budget int) []models.Faculty
-
-	Create(faculty *models.Faculty) error
-	Update(faculty *models.Faculty) error
-	Delete(faculty *models.Faculty) error
 }
 
 type facultyRepository struct {
 	db *gorm.DB
+	data.Repository[models.Faculty]
 }
 
 var (
@@ -34,23 +36,11 @@ func GetFacultyRepository() FacultyRepository {
 	facultyOnce.Do(func() {
 		log.Info().Msg("Initializing faculty repository")
 		facultyRepo = &facultyRepository{
-			db: GetDB(),
+			db:         data.GetDB(),
+			Repository: data.NewRepository[models.Faculty](),
 		}
 	})
 	return facultyRepo
-}
-
-func (r *facultyRepository) FindAll() []models.Faculty {
-	var faculties []models.Faculty
-	r.db.Find(&faculties)
-	return faculties
-}
-
-func (r *facultyRepository) FindByID(id string) (models.Faculty, error) {
-	var faculty models.Faculty
-	err := r.db.First(&faculty, "id = ?", id).Error
-
-	return faculty, err
 }
 
 func (r *facultyRepository) FindByUniversityID(universityID string) []models.Faculty {
@@ -84,16 +74,4 @@ func (r *facultyRepository) Find(name string, country string, city string, domai
 
 	query.Preload("University").Find(&faculties)
 	return faculties
-}
-
-func (r *facultyRepository) Create(faculty *models.Faculty) error {
-	return r.db.Create(&faculty).Error
-}
-
-func (r *facultyRepository) Update(faculty *models.Faculty) error {
-	return r.db.Save(&faculty).Error
-}
-
-func (r *facultyRepository) Delete(faculty *models.Faculty) error {
-	return r.db.Delete(&faculty).Error
 }

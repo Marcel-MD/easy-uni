@@ -6,7 +6,7 @@ import (
 
 	"github.com/Marcel-MD/easy-uni/auth"
 	"github.com/Marcel-MD/easy-uni/config"
-	"github.com/Marcel-MD/easy-uni/repositories"
+	"github.com/Marcel-MD/easy-uni/data/repositories"
 
 	"github.com/Marcel-MD/easy-uni/models"
 
@@ -16,8 +16,8 @@ import (
 )
 
 type UserService interface {
-	FindAll() []models.User
-	FindByID(id string) (models.User, error)
+	FindAll(page, size int) ([]models.User, error)
+	FindById(id string) (models.User, error)
 	Register(user models.RegisterUser) (string, error)
 	Login(user models.LoginUser) (string, error)
 }
@@ -36,27 +36,21 @@ var (
 func GetUserService() UserService {
 	userOnce.Do(func() {
 		log.Info().Msg("Initializing user service")
-
 		userSrv = &userService{
 			mailService: GetMailService(),
 			repository:  repositories.GetUserRepository(),
 			cfg:         config.GetConfig(),
 		}
 	})
-
 	return userSrv
 }
 
-func (s *userService) FindAll() []models.User {
-	log.Debug().Msg("Finding all users")
-
-	return s.repository.FindAll()
+func (s *userService) FindAll(page, size int) ([]models.User, error) {
+	return s.repository.FindAll(page, size)
 }
 
-func (s *userService) FindByID(id string) (models.User, error) {
-	log.Debug().Str("id", id).Msg("Finding user")
-
-	user, err := s.repository.FindByID(id)
+func (s *userService) FindById(id string) (models.User, error) {
+	user, err := s.repository.FindById(id)
 	if err != nil {
 		return user, err
 	}
@@ -65,8 +59,6 @@ func (s *userService) FindByID(id string) (models.User, error) {
 }
 
 func (s *userService) Register(user models.RegisterUser) (string, error) {
-	log.Debug().Msg("Registering user")
-
 	_, err := s.repository.FindByEmail(user.Email)
 	if err == nil {
 		return "", errors.New("user already exists")
@@ -98,8 +90,6 @@ func (s *userService) Register(user models.RegisterUser) (string, error) {
 }
 
 func (s *userService) Login(user models.LoginUser) (string, error) {
-	log.Debug().Msg("Logging in user")
-
 	existingUser, err := s.repository.FindByEmail(user.Email)
 	if err != nil {
 		return "", err

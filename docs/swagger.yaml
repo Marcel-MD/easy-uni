@@ -194,6 +194,10 @@ definitions:
         type: string
       name:
         type: string
+      roles:
+        items:
+          type: string
+        type: array
       updated_at:
         type: string
       visitor_id:
@@ -209,6 +213,13 @@ paths:
       consumes:
       - application/json
       description: get all events
+      parameters:
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: size
+        type: integer
       produces:
       - application/json
       responses:
@@ -285,25 +296,20 @@ paths:
       - application/json
       description: get faculty by name, country, city, domain, budget
       parameters:
-      - description: Faculty Name
-        in: query
-        name: name
-        type: string
-      - description: Faculty Country
-        in: query
-        name: country
-        type: string
-      - description: Faculty City
-        in: query
+      - in: query
+        name: budget
+        type: integer
+      - in: query
         name: city
         type: string
-      - description: Faculty Domain
-        in: query
+      - in: query
+        name: country
+        type: string
+      - in: query
         name: domain
         type: string
-      - description: Faculty Budget
-        in: query
-        name: budget
+      - in: query
+        name: name
         type: string
       produces:
       - application/json
@@ -418,17 +424,14 @@ paths:
       - application/json
       description: get university by name, country, city
       parameters:
-      - description: University Name
-        in: query
-        name: name
+      - in: query
+        name: city
         type: string
-      - description: University Country
-        in: query
+      - in: query
         name: country
         type: string
-      - description: University City
-        in: query
-        name: city
+      - in: query
+        name: name
         type: string
       produces:
       - application/json
@@ -536,6 +539,13 @@ paths:
       consumes:
       - application/json
       description: get all users
+      parameters:
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: size
+        type: integer
       produces:
       - application/json
       responses:

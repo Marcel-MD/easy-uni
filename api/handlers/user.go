@@ -41,10 +41,23 @@ func GetUserHandler() UserHandler {
 // @Tags users
 // @Accept json
 // @Produce json
+// @Param pagination query models.PaginationQuery false "Pagination"
 // @Success 200 {array} models.User
 // @Router /users [get]
 func (h *userHandler) GetAll(c *gin.Context) {
-	users := h.userService.FindAll()
+	query := models.PaginationQuery{}
+	err := c.BindQuery(&query)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	users, err := h.userService.FindAll(query.Page, query.Size)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, users)
 }
 
@@ -57,7 +70,7 @@ func (h *userHandler) GetAll(c *gin.Context) {
 // @Router /users/{user_id} [get]
 func (h *userHandler) GetByID(c *gin.Context) {
 	id := c.Param("user_id")
-	user, err := h.userService.FindByID(id)
+	user, err := h.userService.FindById(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -75,7 +88,7 @@ func (h *userHandler) GetByID(c *gin.Context) {
 func (h *userHandler) GetCurrent(c *gin.Context) {
 	id := c.GetString("user_id")
 
-	user, err := h.userService.FindByID(id)
+	user, err := h.userService.FindById(id)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "record not found"})
 		return

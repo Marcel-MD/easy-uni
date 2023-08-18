@@ -47,7 +47,7 @@ func GetUniversityHandler() UniversityHandler {
 // @Router /universities/{university_id} [get]
 func (h *universityHandler) GetByID(c *gin.Context) {
 	id := c.Param("university_id")
-	university, err := h.service.FindByID(id)
+	university, err := h.service.FindById(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -60,17 +60,18 @@ func (h *universityHandler) GetByID(c *gin.Context) {
 // @Tags universities
 // @Accept json
 // @Produce json
-// @Param name query string false "University Name"
-// @Param country query string false "University Country"
-// @Param city query string false "University City"
+// @Param university query models.UniversityQuery false "University"
 // @Success 200 {array} models.University
 // @Router /universities [get]
 func (h *universityHandler) Get(c *gin.Context) {
-	name := c.Query("name")
-	country := c.Query("country")
-	city := c.Query("city")
+	var query models.UniversityQuery
+	err := c.BindQuery(&query)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	universities := h.service.Find(name, country, city)
+	universities := h.service.Find(query)
 	c.JSON(http.StatusOK, universities)
 }
 

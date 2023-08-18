@@ -1,4 +1,4 @@
-package repositories
+package data
 
 import (
 	"sync"
@@ -18,7 +18,6 @@ var (
 
 func GetDB() *gorm.DB {
 	dbOnce.Do(func() {
-
 		log.Info().Msg("Initializing database")
 
 		cfg := config.GetConfig()

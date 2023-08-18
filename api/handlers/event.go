@@ -40,10 +40,23 @@ func GetEventHandler() EventHandler {
 // @Tags events
 // @Accept json
 // @Produce json
+// @Param pagination query models.PaginationQuery false "Pagination"
 // @Success 200 {array} models.Event
 // @Router /events [get]
 func (h *eventHandler) GetAll(c *gin.Context) {
-	events := h.service.FindAll()
+	var query models.PaginationQuery
+	err := c.BindQuery(&query)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	events, err := h.service.FindAll(query.Page, query.Size)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, events)
 }
 
@@ -56,7 +69,7 @@ func (h *eventHandler) GetAll(c *gin.Context) {
 // @Router /events/{event_id} [get]
 func (h *eventHandler) GetByID(c *gin.Context) {
 	id := c.Param("event_id")
-	event, err := h.service.FindByID(id)
+	event, err := h.service.FindById(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return

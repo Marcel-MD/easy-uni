@@ -28,6 +28,18 @@ const docTemplate = `{
                 "tags": [
                     "events"
                 ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -148,33 +160,28 @@ const docTemplate = `{
                 ],
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Faculty Name",
-                        "name": "name",
+                        "type": "integer",
+                        "name": "budget",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Faculty Country",
-                        "name": "country",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "Faculty City",
                         "name": "city",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Faculty Domain",
+                        "name": "country",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "domain",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "Faculty Budget",
-                        "name": "budget",
+                        "name": "name",
                         "in": "query"
                     }
                 ],
@@ -359,20 +366,17 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "University Name",
-                        "name": "name",
+                        "name": "city",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "University Country",
                         "name": "country",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "University City",
-                        "name": "city",
+                        "name": "name",
                         "in": "query"
                     }
                 ],
@@ -544,6 +548,18 @@ const docTemplate = `{
                 ],
                 "tags": [
                     "users"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -972,6 +988,12 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "updated_at": {
                     "type": "string"

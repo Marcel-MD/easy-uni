@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strconv"
 	"sync"
 
 	"github.com/Marcel-MD/easy-uni/models"
@@ -48,7 +47,7 @@ func GetFacultyHandler() FacultyHandler {
 // @Router /faculties/{faculty_id} [get]
 func (h *facultyHandler) GetByID(c *gin.Context) {
 	id := c.Param("faculty_id")
-	faculty, err := h.service.FindByID(id)
+	faculty, err := h.service.FindById(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
@@ -61,31 +60,18 @@ func (h *facultyHandler) GetByID(c *gin.Context) {
 // @Tags faculties
 // @Accept json
 // @Produce json
-// @Param name query string false "Faculty Name"
-// @Param country query string false "Faculty Country"
-// @Param city query string false "Faculty City"
-// @Param domain query string false "Faculty Domain"
-// @Param budget query string false "Faculty Budget"
+// @Param faculty query models.FacultyQuery false "Faculty"
 // @Success 200 {array} models.Faculty
 // @Router /faculties [get]
 func (h *facultyHandler) Get(c *gin.Context) {
-	name := c.Query("name")
-	country := c.Query("country")
-	city := c.Query("city")
-	domain := c.Query("domain")
-	budgetStr := c.Query("budget")
-	budget := -1
-
-	if budgetStr != "" {
-		var err error
-		budget, err = strconv.Atoi(budgetStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+	var query models.FacultyQuery
+	err := c.BindQuery(&query)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	faculties := h.service.Find(name, country, city, domain, budget)
+	faculties := h.service.Find(query)
 	c.JSON(http.StatusOK, faculties)
 }
 

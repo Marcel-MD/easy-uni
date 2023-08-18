@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/Marcel-MD/easy-uni/api"
-	"github.com/Marcel-MD/easy-uni/repositories"
+	"github.com/Marcel-MD/easy-uni/data"
 
 	"github.com/rs/zerolog/log"
 )
@@ -46,7 +46,7 @@ func main() {
 		log.Fatal().Err(err).Msg("Server forced to shutdown")
 	}
 
-	if err := repositories.CloseDB(); err != nil {
+	if err := data.CloseDB(); err != nil {
 		log.Fatal().Err(err).Msg("Failed to close db connection")
 	}
 
